@@ -11,7 +11,7 @@ export class RegisterService {
 
   constructor(private httpClient: HttpClient) {}
 
-  register(payload: RegisterRequestPayload): Observable<String> {
+  register(payload: RegisterRequestPayload): Observable<string> {
     return this.httpClient.post(this.endpoint, payload, {
       responseType: 'text',
     });

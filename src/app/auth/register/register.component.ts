@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToasterService } from '../../toaster/toaster.service';
 
 import { RegisterService } from './register.service';
 import { RegisterRequestPayload } from './register-request.payload';
@@ -13,7 +15,11 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   registerRequestPayload: RegisterRequestPayload;
 
-  constructor(private registerService: RegisterService) {
+  constructor(
+    private registerService: RegisterService,
+    private router: Router,
+    private toastr: ToasterService
+  ) {
     this.registerRequestPayload = {
       username: '',
       email: '',
@@ -40,10 +46,14 @@ export class RegisterComponent implements OnInit {
 
     this.registerService.register(this.registerRequestPayload).subscribe(
       (data) => {
-        console.log({ data });
+        this.toastr.info(data);
+        this.router.navigate(['/login'], {
+          queryParams: { registered: 'true' },
+        });
       },
       (error) => {
         console.log({ error });
+        this.toastr.error('Registration failed!');
       }
     );
   }
