@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-// import { ToastrService } from 'ngx-toastr';
 
 import { LoginRequestPayload } from './login-request.payload';
 import { LoginService } from './login.service';
@@ -22,7 +21,7 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private toastr: ToasterService
+    private toaster: ToasterService
   ) {
     this.loginRequestPayload = {
       username: '',
@@ -38,17 +37,17 @@ export class LoginComponent implements OnInit {
 
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params.registered !== undefined && params.registered === 'true') {
-        this.toastr.info(
+        this.toaster.info(
           'Please check your inbox for activation email to activate your account!',
           ToasterPosition.bottomRight,
           'Activate account'
         );
-        this.toastr.success('Signup successfully');
+        this.toaster.success('Signup successfully');
       }
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.loginRequestPayload.username = this.loginForm.get('username').value;
     this.loginRequestPayload.password = this.loginForm.get('password').value;
 
@@ -57,13 +56,13 @@ export class LoginComponent implements OnInit {
         if (data) {
           this.isError = false;
           this.router.navigateByUrl('/');
-          this.toastr.success('Login successfully');
+          this.toaster.success('Login successfully');
         }
       },
       (error) => {
         this.isError = true;
         console.log({ error });
-        this.toastr.error('Wrong credentials. Please recheck entered fields');
+        this.toaster.error('Wrong credentials. Please recheck entered fields');
       }
     );
   }
