@@ -18,12 +18,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private httpClient: HttpClient
   ) {
-    // this.showUserPosts();
-    this.httpClient
-      .get('http://localhost:8080/api/posts/4')
-      .subscribe((data) => {
-        console.log(data);
-      });
+    this.showUserPosts();
   }
 
   ngOnInit(): void {}

@@ -1,4 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --navbar-height: 80px;
+}
+
+html {
+  padding: 0;
+  height: 100%;
+}
+body {
+  margin-top: 63px;
+  height: 100%;
+}
+
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
 input.ng-invalid.ng-touched {
   border: 1px solid red;
 }

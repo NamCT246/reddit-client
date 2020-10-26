@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { LoginRequestPayload } from './login-request.payload';
-import { LoginService } from './login.service';
+import { AuthService } from '../auth.service';
 import { ToasterService } from '../../toaster/toaster.service';
 import { ToasterPosition } from 'src/app/toaster/constants/toaster';
 
@@ -16,9 +16,10 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginRequestPayload: LoginRequestPayload;
   isError: boolean;
+  returnUrl: string;
 
   constructor(
-    private loginService: LoginService,
+    private authService: AuthService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private toaster: ToasterService
@@ -27,6 +28,10 @@ export class LoginComponent implements OnInit {
       username: '',
       password: '',
     };
+
+    if (this.authService.currentUser) {
+      this.router.navigate(['/']);
+    }
   }
 
   ngOnInit(): void {
@@ -34,6 +39,10 @@ export class LoginComponent implements OnInit {
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     });
+
+    // get return url from route parameters or default to '/'
+    this.returnUrl =
+      this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
 
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params.registered !== undefined && params.registered === 'true') {
@@ -51,11 +60,11 @@ export class LoginComponent implements OnInit {
     this.loginRequestPayload.username = this.loginForm.get('username').value;
     this.loginRequestPayload.password = this.loginForm.get('password').value;
 
-    this.loginService.login(this.loginRequestPayload).subscribe(
+    this.authService.login(this.loginRequestPayload).subscribe(
       (data) => {
         if (data) {
           this.isError = false;
-          this.router.navigateByUrl('/');
+          this.router.navigate([this.returnUrl]);
           this.toaster.success('Login successfully');
         }
       },

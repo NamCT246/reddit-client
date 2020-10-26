@@ -5,14 +5,14 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { ToasterService } from '../toaster/toaster.service';
-import { PostModel } from './post-model';
-import { CommentModel } from '../comment/comment.model';
+import { CommentModel } from './comment.model';
+import { ajax } from 'rxjs/ajax';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PostService {
-  baseUrl: string = 'http://localhost:8080/api/posts';
+export class CommentService {
+  commentUrl = `http://localhost:8080/api/comments`;
 
   constructor(
     private ngLocalStorage: LocalStorageService,
@@ -20,17 +20,8 @@ export class PostService {
     private toaster: ToasterService
   ) {}
 
-  getPostByPostId(postId: number): Observable<PostModel> {
-    return this.httpClient.get(`${this.baseUrl}/${postId}`).pipe(
-      catchError((error) => {
-        console.log('error: ', error);
-        return of(error);
-      })
-    );
-  }
-
-  getPostsByUsername(username: string): Observable<PostModel[]> {
-    return this.httpClient.get(`${this.baseUrl}/by-user/${username}`).pipe(
+  getCommentsOnPost(postId: number): Observable<CommentModel[]> {
+    return this.httpClient.get(`${this.commentUrl}/by-post/${postId}`).pipe(
       catchError((error) => {
         console.log('error: ', error);
         return of(error);
